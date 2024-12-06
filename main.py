@@ -12,6 +12,7 @@ def main():
     collation = "utf8mb4_general_ci"  # This too
 
     make_user(user, pw, host, db, charset, collation)
+    update_table_enrollment(user, pw, host, db, charset, collation)
 
 
 def make_user(user: str, pw: str, hst: str, db: str, charset: str, collation: str):
@@ -58,6 +59,9 @@ BEFORE INSERT ON ENROLLMENT
 FOR EACH ROW
 BEGIN
     DECLARE total_points DECIMAL(5,2) DEFAULT 0;
+
+END ||
+DELIMETER ;
     """)
 
 
