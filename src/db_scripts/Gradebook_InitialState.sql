@@ -1,4 +1,5 @@
-USE Assignment2;
+-- CREATE DATABASE grdbkDB;
+-- USE grdbkDB;
 
 INSERT INTO COURSE (Course_Id, Name, A_Min, B_Min, C_Min, D_Min, Credits) VALUES
 ('DST-69', 'Data Structures', 90.0, 80.0, 70.0, 60.0, 3),
