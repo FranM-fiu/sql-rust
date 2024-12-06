@@ -1,0 +1,75 @@
+USE Assignment2;
+
+DROP TABLE IF EXISTS GRADED_COMPONENTS;
+DROP TABLE IF EXISTS COMPONENT;
+DROP TABLE IF EXISTS ENROLLMENT;
+DROP TABLE IF EXISTS SECTION;
+DROP TABLE IF EXISTS TERM;
+DROP TABLE IF EXISTS COURSE;
+DROP TABLE IF EXISTS STUDENT;
+
+CREATE TABLE TERM (
+    Term_Id CHAR(4) PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    Start_Date DATE NOT NULL,
+    End_Date DATE NOT NULL
+);
+
+CREATE TABLE COURSE (
+    Course_Id VARCHAR(10) PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    A_Min FLOAT NOT NULL,
+    B_Min FLOAT NOT NULL,
+    C_Min FLOAT NOT NULL,
+    D_Min FLOAT NOT NULL,
+    Credits INT DEFAULT 0 NOT NULL
+);
+
+CREATE TABLE SECTION (
+    Course_Id VARCHAR(10),
+    SectID VARCHAR(10),
+    Online BOOLEAN,
+    Schedule VARCHAR(100),
+    Room_No VARCHAR(10),
+    Term CHAR(4) NOT NULL,
+    PRIMARY KEY (Course_Id, SectID),
+    FOREIGN KEY (Course_Id) REFERENCES COURSE(Course_Id),
+    FOREIGN KEY (Term) REFERENCES TERM(Term_Id)
+);
+
+CREATE TABLE STUDENT (
+    Panther_ID VARCHAR(10) PRIMARY KEY,
+    First_Name VARCHAR(100) NOT NULL,
+    Last_Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL
+);
+
+CREATE TABLE COMPONENT (
+    Course_Id VARCHAR(10),
+    Name VARCHAR(100),
+    Max_Points FLOAT NOT NULL,
+    Weight FLOAT NOT NULL,
+    PRIMARY KEY (Course_Id, Name),
+    FOREIGN KEY (Course_Id) REFERENCES COURSE(Course_Id)
+);
+
+CREATE TABLE ENROLLMENT (
+    Course VARCHAR(10),
+    Section VARCHAR(10),
+    Panther_ID VARCHAR(10),
+    Final_Grade ENUM('A', 'B', 'C', 'D', 'F'),
+    Status ENUM('Enrolled', 'Dropped', 'Completed') NOT NULL,
+    PRIMARY KEY (Course, Section, Panther_ID),
+    FOREIGN KEY (Course, Section) REFERENCES SECTION(Course_Id, SectID),
+    FOREIGN KEY (Panther_ID) REFERENCES STUDENT(Panther_ID)
+);
+
+CREATE TABLE GRADED_COMPONENTS (
+    Course VARCHAR(10),
+    Comp_Name VARCHAR(100),
+    Student VARCHAR(10),
+    Points FLOAT,
+    PRIMARY KEY (Course, Comp_Name, Student),
+    FOREIGN KEY (Course, Comp_Name) REFERENCES COMPONENT(Course_Id, Name),
+    FOREIGN KEY (Student) REFERENCES STUDENT(Panther_ID)
+);
