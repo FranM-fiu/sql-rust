@@ -1,0 +1,42 @@
+import mysql.connector
+
+# Replace with your actual database credentials
+db_config = {
+    'user': 'your_username',
+    'password': 'your_password',
+    'host': 'localhost',
+    'database': 'Gradebook'
+}
+
+try:
+    # Connect to the database
+    connection = mysql.connector.connect(**db_config)
+    
+    if connection.is_connected():
+        print("Connected to the database")
+
+        # Create a cursor object
+        cursor = connection.cursor()
+
+        # Execute the query to retrieve data from the view
+        cursor.execute("SELECT * FROM Sections_Enrollment")
+
+        # Fetch all rows from the executed query
+        rows = cursor.fetchall()
+
+        # Print out the column names
+        column_names = [i[0] for i in cursor.description]
+        print(column_names)
+
+        # Print out each row
+        for row in rows:
+            print(row)
+
+except mysql.connector.Error as err:
+    print(f"Error: {err}")
+
+finally:
+    if connection.is_connected():
+        cursor.close()
+        connection.close()
+        print("Connection closed")

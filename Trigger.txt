@@ -1,3 +1,5 @@
+DELIMETER ||
+
 CREATE OR REPLACE TRIGGER calculate_final_grade
 AFTER INSERT OR UPDATE ON GRADED_COMPONENTS
 FOR EACH ROW
@@ -28,6 +30,5 @@ BEGIN
     UPDATE ENROLLMENT
     SET Final_Grade = final_grade
     WHERE Course = :NEW.Course AND Panther_ID = :NEW.Student;
-END;
-/
-```
+END ||
+DELIMETER ;
