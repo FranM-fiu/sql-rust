@@ -49,11 +49,8 @@ def update_table_enrollment(
         database=db,
     )
 
-    cursor = cnx.cursor()
-    # cursor.execute("DROP TRIGGER IF EXISTS update_table_ins")
-    cursor.execute("DROP TRIGGER IF EXISTS update_table_upd")
-    cursor.execute("""
-        DELIMETER ||
+    sqlScript = """
+
         CREATE TRIGGER update_table_ins
         AFTER INSERT ON GRADED_COMPONENTS
         FOR EACH ROW
@@ -94,12 +91,8 @@ def update_table_enrollment(
             SET Final_Grade = grade
             WHERE Course = NEW.Course AND Panther_ID = NEW.Student;
 
-        END ||
-        DELIMETER ;
-    """)
-    # For update
-    cursor.execute("""
-        DELIMETER ||
+        END;
+
         CREATE TRIGGER update_table_upd
         AFTER UPDATE ON GRADED_COMPONENTS
         FOR EACH ROW
@@ -117,7 +110,7 @@ def update_table_enrollment(
             JOIN GRADED_COMPONENTS g
             ON c.Course_Id = g.Course AND c.Name = g.Comp_Name
             WHERE g.Student = NEW.Student AND g.Course = NEW.Course;
-
+            
             SELECT A_Min, B_Min, C_Min, D_Min
             INTO a_min, b_min, c_min, d_min
             FROM COURSE
@@ -140,9 +133,17 @@ def update_table_enrollment(
             SET Final_Grade = grade
             WHERE Course = NEW.Course AND Panther_ID = NEW.Student;
 
-        END ||
-        DELIMETER ;
-    """)
+        END;
+    """
+
+    cursor = cnx.cursor()
+    cursor.execute("DROP TRIGGER IF EXISTS update_table_ins")
+    cursor.execute("DROP TRIGGER IF EXISTS update_table_upd")
+
+    sql = sqlScript.split(";")
+    for statement in sql:
+        if statement.strip():
+            cursor.execute(statement)
 
     print("Triggers for update and inserting the table made")
 
