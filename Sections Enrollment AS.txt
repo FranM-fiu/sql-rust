@@ -1,0 +1,6 @@
+CREATE VIEW Sections_Enrollment AS
+SELECT s.Section, c.Course_ID, c.Course_Name, COUNT(e.Panther_ID) AS Enrolled_Students
+FROM SECTIONS s
+JOIN COURSES c ON s.Course_ID = c.Course_ID
+LEFT JOIN ENROLLMENT e ON s.Section = e.Section
+GROUP BY s.Section, c.Course_ID, c.Course_Name;
