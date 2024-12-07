@@ -1,5 +1,0 @@
-2.  (40 points) Create triggers to automatically populate the derived attribute Final_Grade  in ENROLLMENT table based on the Points accumulated in graded components and the course's grading scale. If a course A has 3 grading components A1, A2, and A3, and their weight to the final grade are 40%, 30%, and 30% respectively, total points should be calculated as follow:
-
-         Total Points = A1 points * 0.40 + A2 points * 0.30 + A3 points * 0.30
-
-The Final_Grade will be the letter grade that corresponds based on Total_Points value and the grading scale for course A.

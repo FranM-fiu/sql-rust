@@ -5,7 +5,8 @@ import mysql.connector
 
 def main():
     user = "root"
-    pw = input("Enter root password (to create privileged user)\n")
+    # pw = input("Enter root password (to create privileged user)\n")
+    pw = "FranMart.7080"
     host = "127.0.0.1"
     db = "grdbkDB"
     charset = "utf8mb4"  # I needed this, it wouldnt work otherwise
@@ -25,7 +26,7 @@ def make_user(user: str, pw: str, hst: str, db: str, charset: str, collation: st
     )
 
     user = "gradebook-admin"
-    pw = "Grad3B00k!"
+    pw = "Grad3B$$k!"
 
     cursor = cnx.cursor()
     cursor.execute(f"DROP USER '{user}'@'{hst}'")  # I get error otherwise
@@ -49,8 +50,7 @@ def update_table_enrollment(
         database=db,
     )
 
-    sqlScript = """
-
+    insTrigger = """
         CREATE TRIGGER update_table_ins
         AFTER INSERT ON GRADED_COMPONENTS
         FOR EACH ROW
@@ -92,7 +92,8 @@ def update_table_enrollment(
             WHERE Course = NEW.Course AND Panther_ID = NEW.Student;
 
         END;
-
+    """
+    updTrigger = """
         CREATE TRIGGER update_table_upd
         AFTER UPDATE ON GRADED_COMPONENTS
         FOR EACH ROW
@@ -140,10 +141,8 @@ def update_table_enrollment(
     cursor.execute("DROP TRIGGER IF EXISTS update_table_ins")
     cursor.execute("DROP TRIGGER IF EXISTS update_table_upd")
 
-    sql = sqlScript.split(";")
-    for statement in sql:
-        if statement.strip():
-            cursor.execute(statement)
+    cursor.execute(insTrigger)
+    cursor.execute(updTrigger)
 
     print("Triggers for update and inserting the table made")
 
